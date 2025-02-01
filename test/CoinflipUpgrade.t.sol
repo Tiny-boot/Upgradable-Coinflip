@@ -18,17 +18,17 @@ contract CoinflipUpgradeTest is Test {
 
     function setUp() public {
         // Set deployer to know address
-        
+
         vm.startPrank(owner);
         // Initialize both versions of the contract
         game = new Coinflip();
         gameV2 = new CoinflipV2();
-        
+
         // Launch the proxy with V1 implementation
         proxy = new UUPSProxy(address(game), abi.encodeWithSignature("initialize(address)", owner));
 
         // We need to cheat here a litte because the coin flip game is not deployed and the proxy
-        // will not know how to access the game unless wrapped. 
+        // will not know how to access the game unless wrapped.
         wrappedV1 = Coinflip(address(proxy));
     }
 
@@ -45,7 +45,7 @@ contract CoinflipUpgradeTest is Test {
     /////////////////////////////////////////////////////
 
     function test_V1Win() public {
-        assertEq(wrappedV1.UserInput([1,0,0,0,1,1,1,1,0,1]), true);
+        assertEq(wrappedV1.UserInput([1, 0, 0, 0, 1, 1, 1, 1, 0, 1]), true);
     }
 
     /////////////////////////////////////////////////////
@@ -59,6 +59,4 @@ contract CoinflipUpgradeTest is Test {
         wrappedV2.seedRotation("1234567890", 5);
         assertEq(wrappedV2.seed(), "6789012345");
     }
-
-
 }
